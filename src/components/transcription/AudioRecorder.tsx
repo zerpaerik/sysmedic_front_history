@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Square, Play, Pause, RotateCcw, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+import { Mic, Square, Play, Pause, RotateCcw, Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { transcriptionService } from '@/services/transcriptionService';
 import { toast } from 'sonner';
 

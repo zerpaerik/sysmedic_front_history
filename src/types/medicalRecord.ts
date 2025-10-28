@@ -101,6 +101,8 @@ export interface MedicalRecordFilters {
   specialtyId?: string;
   status?: MedicalRecordStatus;
   appointmentDate?: string;
+  startDate?: string;
+  endDate?: string;
   hasTriageData?: boolean;
   isActive?: boolean;
   page?: number;

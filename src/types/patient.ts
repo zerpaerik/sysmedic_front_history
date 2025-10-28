@@ -85,9 +85,7 @@ export interface CreatePatientDto {
   identificationNumber: string;
 }
 
-export interface UpdatePatientDto extends Partial<CreatePatientDto> {
-  id: string;
-}
+export type UpdatePatientDto = Partial<CreatePatientDto>;
 
 export interface PatientFilters {
   search?: string;
