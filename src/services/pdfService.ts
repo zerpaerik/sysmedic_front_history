@@ -24,12 +24,18 @@ export class PDFService {
       let signatureBase64 = '';
       if (medicalRecord.professional.signatureUrl) {
         try {
-          signatureBase64 = await this.imageUrlToBase64(
-            `${process.env.NEXT_PUBLIC_API_URL || 'https://back-history-production.up.railway.app'}${medicalRecord.professional.signatureUrl}`
-          );
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://back-history-production.up.railway.app';
+          const fullSignatureUrl = `${apiUrl}${medicalRecord.professional.signatureUrl}`;
+          console.log('Loading signature from:', fullSignatureUrl);
+          
+          signatureBase64 = await this.imageUrlToBase64(fullSignatureUrl);
+          console.log('Signature loaded successfully, base64 length:', signatureBase64.length);
         } catch (error) {
-          console.warn('Error loading signature image:', error);
+          console.error('Error loading signature image:', error);
+          console.error('Signature URL was:', medicalRecord.professional.signatureUrl);
         }
+      } else {
+        console.log('No signature URL found for professional:', medicalRecord.professional.fullName);
       }
 
       // Crear un elemento HTML temporal para el PDF
@@ -95,19 +101,34 @@ export class PDFService {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
+      
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0);
-          resolve(canvas.toDataURL('image/png'));
-        } else {
-          reject(new Error('Could not get canvas context'));
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth || img.width;
+          canvas.height = img.naturalHeight || img.height;
+          const ctx = canvas.getContext('2d');
+          
+          if (ctx) {
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL('image/png');
+            console.log('Image converted to base64 successfully');
+            resolve(dataUrl);
+          } else {
+            reject(new Error('Could not get canvas context'));
+          }
+        } catch (error) {
+          console.error('Error converting image to base64:', error);
+          reject(error);
         }
       };
-      img.onerror = () => reject(new Error('Failed to load image'));
+      
+      img.onerror = (error) => {
+        console.error('Failed to load image from URL:', url, error);
+        reject(new Error(`Failed to load image from: ${url}`));
+      };
+      
+      // Importante: setear src después de los event listeners
       img.src = url;
     });
   }
