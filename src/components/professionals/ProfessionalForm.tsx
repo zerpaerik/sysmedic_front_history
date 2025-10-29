@@ -15,7 +15,6 @@ import { Specialty } from '@/types/specialty';
 import { professionalService } from '@/services/professionalService';
 import { specialtyService } from '@/services/specialtyService';
 import { User, Save, X, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 
 interface ProfessionalFormProps {
   professional?: Professional;
@@ -390,12 +389,12 @@ export function ProfessionalForm({ professional, onSuccess, onCancel }: Professi
               {signaturePreview ? (
                 <div className="relative inline-block">
                   <div className="border-2 border-gray-300 rounded-lg p-2 bg-white">
-                    <Image
-                      src={signaturePreview.startsWith('http') ? signaturePreview : `${process.env.NEXT_PUBLIC_API_URL}${signaturePreview}`}
+                    <img
+                      src={signaturePreview.startsWith('data:') || signaturePreview.startsWith('http') 
+                        ? signaturePreview 
+                        : `${process.env.NEXT_PUBLIC_API_URL || 'https://back-history-production.up.railway.app'}${signaturePreview}`}
                       alt="Firma"
-                      width={200}
-                      height={100}
-                      className="object-contain"
+                      className="object-contain max-w-[200px] max-h-[100px]"
                     />
                   </div>
                   <Button

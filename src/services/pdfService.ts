@@ -20,8 +20,20 @@ export class PDFService {
     specialtyHistory: any
   ): Promise<void> {
     try {
+      // Convertir firma a base64 si existe
+      let signatureBase64 = '';
+      if (medicalRecord.professional.signatureUrl) {
+        try {
+          signatureBase64 = await this.imageUrlToBase64(
+            `${process.env.NEXT_PUBLIC_API_URL || 'https://back-history-production.up.railway.app'}${medicalRecord.professional.signatureUrl}`
+          );
+        } catch (error) {
+          console.warn('Error loading signature image:', error);
+        }
+      }
+
       // Crear un elemento HTML temporal para el PDF
-      const pdfContent = this.createPDFContent(medicalRecord, patient, medicalHistory, specialtyHistory);
+      const pdfContent = this.createPDFContent(medicalRecord, patient, medicalHistory, specialtyHistory, signatureBase64);
       
       // Crear un contenedor temporal en el DOM
       const tempContainer = document.createElement('div');
@@ -79,11 +91,33 @@ export class PDFService {
     }
   }
 
+  private async imageUrlToBase64(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        } else {
+          reject(new Error('Could not get canvas context'));
+        }
+      };
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = url;
+    });
+  }
+
   private createPDFContent(
     medicalRecord: MedicalRecord,
     patient: Patient | null,
     medicalHistory: any,
-    specialtyHistory: any
+    specialtyHistory: any,
+    signatureBase64: string = ''
   ): string {
     const formatDate = (date: Date | string) => {
       return new Date(date).toLocaleDateString('es-PE', {
@@ -358,12 +392,11 @@ export class PDFService {
           <div style="display: flex; justify-content: space-between; align-items: end; margin-top: 30px;">
             <div style="text-align: center; width: 200px;">
               <div style="height: 80px; border-bottom: 2px solid #475569; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
-                ${medicalRecord.professional.signatureUrl ? `
+                ${signatureBase64 ? `
                   <img 
-                    src="${process.env.NEXT_PUBLIC_API_URL || 'https://back-history-production.up.railway.app'}${medicalRecord.professional.signatureUrl}" 
+                    src="${signatureBase64}" 
                     alt="Firma del profesional" 
                     style="max-height: 70px; max-width: 180px; object-fit: contain;"
-                    crossorigin="anonymous"
                   />
                 ` : `
                   <span style="color: #64748b; font-style: italic; font-size: 12px;">[Sin Firma Digital]</span>
