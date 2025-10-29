@@ -31,6 +31,7 @@ export interface Professional {
   status: ProfessionalStatus;
   licenseExpiryDate?: string;
   observations?: string;
+  signatureUrl?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -56,6 +57,7 @@ export interface CreateProfessionalDto {
   status: ProfessionalStatus;
   licenseExpiryDate?: string;
   observations?: string;
+  signatureUrl?: string;
   specialtyIds?: string[];
 }
 

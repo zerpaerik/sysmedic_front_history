@@ -118,6 +118,24 @@ class ProfessionalService {
       throw error;
     }
   }
+
+  async uploadSignature(file: File): Promise<{ signatureUrl: string }> {
+    try {
+      const formData = new FormData();
+      formData.append('signature', file);
+
+      const response = await axios.post(`${this.baseURL}/upload-signature`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error uploading signature:', error);
+      throw error;
+    }
+  }
 }
 
 export const professionalService = new ProfessionalService();

@@ -14,7 +14,8 @@ import {
 import { Specialty } from '@/types/specialty';
 import { professionalService } from '@/services/professionalService';
 import { specialtyService } from '@/services/specialtyService';
-import { User, Save, X } from 'lucide-react';
+import { User, Save, X, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface ProfessionalFormProps {
   professional?: Professional;
@@ -24,7 +25,9 @@ interface ProfessionalFormProps {
 
 export function ProfessionalForm({ professional, onSuccess, onCancel }: ProfessionalFormProps) {
   const [loading, setLoading] = useState(false);
+  const [uploadingSignature, setUploadingSignature] = useState(false);
   const [specialties, setSpecialties] = useState<Specialty[]>([]);
+  const [signaturePreview, setSignaturePreview] = useState<string | null>(null);
   const [formData, setFormData] = useState<CreateProfessionalDto | UpdateProfessionalDto>({
     firstName: '',
     secondName: '',
@@ -39,6 +42,7 @@ export function ProfessionalForm({ professional, onSuccess, onCancel }: Professi
     status: ProfessionalStatus.ACTIVE,
     licenseExpiryDate: '',
     observations: '',
+    signatureUrl: '',
     specialtyIds: [],
   });
 
@@ -76,8 +80,13 @@ export function ProfessionalForm({ professional, onSuccess, onCancel }: Professi
         status: professional.status,
         licenseExpiryDate: professional.licenseExpiryDate || '',
         observations: professional.observations || '',
+        signatureUrl: professional.signatureUrl || '',
         specialtyIds: professional.specialties?.map(s => s.id) || [],
       });
+      // Cargar preview de firma existente
+      if (professional.signatureUrl) {
+        setSignaturePreview(professional.signatureUrl);
+      }
     }
   }, [professional]);
 
@@ -95,6 +104,50 @@ export function ProfessionalForm({ professional, onSuccess, onCancel }: Professi
         ? prev.specialtyIds.filter(id => id !== specialtyId)
         : [...(prev.specialtyIds || []), specialtyId]
     }));
+  };
+
+  const handleSignatureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tamaño (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('La imagen no debe superar 2MB');
+      return;
+    }
+
+    // Validar tipo
+    if (!file.type.match(/image\/(jpeg|jpg|png|gif|svg\+xml)/)) {
+      alert('Solo se permiten imágenes (JPG, PNG, GIF, SVG)');
+      return;
+    }
+
+    setUploadingSignature(true);
+
+    try {
+      // Subir firma al backend
+      const { signatureUrl } = await professionalService.uploadSignature(file);
+      
+      // Actualizar formData con la URL
+      setFormData(prev => ({ ...prev, signatureUrl }));
+      
+      // Crear preview local
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSignaturePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading signature:', error);
+      alert('Error al subir la firma. Por favor, intente nuevamente.');
+    } finally {
+      setUploadingSignature(false);
+    }
+  };
+
+  const handleRemoveSignature = () => {
+    setFormData(prev => ({ ...prev, signatureUrl: '' }));
+    setSignaturePreview(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -326,6 +379,54 @@ export function ProfessionalForm({ professional, onSuccess, onCancel }: Professi
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Observaciones adicionales..."
             />
+          </div>
+
+          {/* Firma Digital */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Firma Digital
+            </label>
+            <div className="space-y-3">
+              {signaturePreview ? (
+                <div className="relative inline-block">
+                  <div className="border-2 border-gray-300 rounded-lg p-2 bg-white">
+                    <Image
+                      src={signaturePreview.startsWith('http') ? signaturePreview : `${process.env.NEXT_PUBLIC_API_URL}${signaturePreview}`}
+                      alt="Firma"
+                      width={200}
+                      height={100}
+                      className="object-contain"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleRemoveSignature}
+                    className="mt-2"
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Eliminar Firma
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/gif,image/svg+xml"
+                    onChange={handleSignatureUpload}
+                    disabled={uploadingSignature}
+                    className="max-w-md"
+                  />
+                  {uploadingSignature && (
+                    <span className="text-sm text-gray-500">Subiendo...</span>
+                  )}
+                </div>
+              )}
+              <p className="text-xs text-gray-500">
+                Formatos permitidos: JPG, PNG, GIF, SVG. Tamaño máximo: 2MB
+              </p>
+            </div>
           </div>
 
           {/* Botones */}
