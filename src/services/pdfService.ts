@@ -358,7 +358,16 @@ export class PDFService {
           <div style="display: flex; justify-content: space-between; align-items: end; margin-top: 30px;">
             <div style="text-align: center; width: 200px;">
               <div style="height: 80px; border-bottom: 2px solid #475569; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
-                <span style="color: #64748b; font-style: italic; font-size: 12px;">[Firma Digital]</span>
+                ${medicalRecord.professional.signatureUrl ? `
+                  <img 
+                    src="${process.env.NEXT_PUBLIC_API_URL || 'https://back-history-production.up.railway.app'}${medicalRecord.professional.signatureUrl}" 
+                    alt="Firma del profesional" 
+                    style="max-height: 70px; max-width: 180px; object-fit: contain;"
+                    crossorigin="anonymous"
+                  />
+                ` : `
+                  <span style="color: #64748b; font-style: italic; font-size: 12px;">[Sin Firma Digital]</span>
+                `}
               </div>
               <div style="font-size: 14px; color: #475569;">
                 <strong>Dr. ${medicalRecord.professional.firstName} ${medicalRecord.professional.firstLastname}</strong><br>
