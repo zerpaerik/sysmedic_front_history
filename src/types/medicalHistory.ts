@@ -102,6 +102,7 @@ export interface MedicalHistoryBase {
 
   // Observaciones
   observations?: string;
+  companyId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -246,6 +247,7 @@ export interface SpecialtyMedicalHistory {
   // Observaciones
   clinicalNotes?: string;
   observations?: string;
+  companyId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

@@ -5,6 +5,7 @@ export interface Specialty {
   code: string;
   description?: string;
   department?: string;
+  companyId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

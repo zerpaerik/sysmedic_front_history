@@ -20,6 +20,7 @@ export interface Triage {
   heartRate?: string;
   temperature?: string;
   observations?: string;
+  companyId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,6 +39,7 @@ export interface MedicalRecord {
   diagnosis?: string;
   treatment?: string;
   observations?: string;
+  companyId: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

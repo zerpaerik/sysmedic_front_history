@@ -32,6 +32,7 @@ export interface Professional {
   licenseExpiryDate?: string;
   observations?: string;
   signatureUrl?: string;
+  companyId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

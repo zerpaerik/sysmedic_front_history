@@ -55,6 +55,7 @@ export interface Patient {
   observations?: string;
   identificationType: IdentificationType;
   identificationNumber: string;
+  companyId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
