@@ -104,7 +104,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 )}
               </div>
               <p className="text-sm text-gray-600">
-                Bienvenido, {user.firstName} {user.lastName}
+                Bienvenido, {user.username}
               </p>
             </div>
 
@@ -155,7 +155,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex items-center gap-4">
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">
-                  {user.firstName} {user.lastName}
+                  {user.username}
                 </p>
                 <p className="text-xs text-gray-500 capitalize">{user.role}</p>
                 {company && !hasSubscription && (
@@ -164,7 +164,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white font-medium text-sm">
-                  {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+                  {user.username?.charAt(0)?.toUpperCase()}
                 </span>
               </div>
             </div>

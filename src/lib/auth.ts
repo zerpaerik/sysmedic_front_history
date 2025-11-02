@@ -11,9 +11,10 @@ export interface AuthResponse {
   accessToken: string;
   user: {
     id: string;
+    username: string;
     email: string;
-    firstName: string;
-    lastName: string;
+    firstName?: string;
+    lastName?: string;
     role: string;
     companyId?: string;
     companyName?: string;
@@ -22,9 +23,10 @@ export interface AuthResponse {
 
 export interface User {
   id: string;
+  username: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   role: string;
   companyId?: string;
   companyName?: string;

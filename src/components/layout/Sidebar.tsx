@@ -45,12 +45,12 @@ const sidebarItems = [
     icon: UserCheck,
   },
   {
-    title: 'Historias Clínicas',
+    title: 'Consultas',
     href: '/medical-records',
     icon: FileText,
   },
   {
-    title: 'Consultas',
+    title: 'Historias Clínicas',
     href: '/consultations',
     icon: Search,
   },

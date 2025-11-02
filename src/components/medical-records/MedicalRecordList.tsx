@@ -367,7 +367,7 @@ const MedicalRecordList: React.FC<MedicalRecordListProps> = ({
                         )}
                       </div>
                       
-                      {/* Botón para Historia Clínica Completa - Solo si ya tiene triaje */}
+                      {/* Botón para Llenar Historia - Solo si ya tiene triaje */}
                       {hasTriageData(medicalRecord) && onMedicalHistoryBase && (
                         <Button
                           onClick={() => onMedicalHistoryBase(medicalRecord)}
@@ -375,7 +375,7 @@ const MedicalRecordList: React.FC<MedicalRecordListProps> = ({
                           className="px-3 py-1 text-xs bg-purple-600 hover:bg-purple-700 w-full"
                         >
                           <FileText className="w-3 h-3 mr-1" />
-                          Historia Completa
+                          Llenar Historia
                         </Button>
                       )}
                     </>

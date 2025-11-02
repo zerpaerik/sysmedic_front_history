@@ -527,47 +527,6 @@ export default function SpecialtyMedicalHistoryForm({
           <form onSubmit={handleSubmit(onSubmit, (errors) => {
             console.log('❌ Validation errors:', errors);
           })} className="space-y-6">
-            {/* Motivo de Consulta y Enfermedad Actual */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Anamnesis</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="chiefComplaint">Motivo de Consulta *</Label>
-                  <Textarea
-                    {...register('chiefComplaint')}
-                    placeholder="¿Por qué consulta el paciente?"
-                    className="min-h-[80px]"
-                  />
-                  {errors.chiefComplaint && (
-                    <p className="text-sm text-red-500">{errors.chiefComplaint.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="currentIllness">Enfermedad Actual *</Label>
-                  <Textarea
-                    {...register('currentIllness')}
-                    placeholder="Descripción detallada de la enfermedad actual"
-                    className="min-h-[100px]"
-                  />
-                  {errors.currentIllness && (
-                    <p className="text-sm text-red-500">{errors.currentIllness.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="systemsReview">Revisión por Sistemas</Label>
-                  <Textarea
-                    {...register('systemsReview')}
-                    placeholder="Revisión por sistemas relevante"
-                    className="min-h-[80px]"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Signos Vitales */}
             <Card>
               <CardHeader>
@@ -653,6 +612,47 @@ export default function SpecialtyMedicalHistoryForm({
               </CardContent>
             </Card>
 
+            {/* Motivo de Consulta y Enfermedad Actual */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Anamnesis</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="chiefComplaint">Motivo de Consulta *</Label>
+                  <Textarea
+                    {...register('chiefComplaint')}
+                    placeholder="¿Por qué consulta el paciente?"
+                    className="min-h-[80px]"
+                  />
+                  {errors.chiefComplaint && (
+                    <p className="text-sm text-red-500">{errors.chiefComplaint.message}</p>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="currentIllness">Enfermedad Actual *</Label>
+                  <Textarea
+                    {...register('currentIllness')}
+                    placeholder="Descripción detallada de la enfermedad actual"
+                    className="min-h-[100px]"
+                  />
+                  {errors.currentIllness && (
+                    <p className="text-sm text-red-500">{errors.currentIllness.message}</p>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="systemsReview">Revisión por Aparatos y Sistemas</Label>
+                  <Textarea
+                    {...register('systemsReview')}
+                    placeholder="Revisión por aparatos y sistemas relevante"
+                    className="min-h-[80px]"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Examen Físico General */}
             <Card>
               <CardHeader>
@@ -683,7 +683,7 @@ export default function SpecialtyMedicalHistoryForm({
                   <Label htmlFor="primaryDiagnosis">Diagnóstico Principal</Label>
                   <Textarea
                     {...register('primaryDiagnosis')}
-                    placeholder="Diagnóstico principal con código CIE-10 si es posible"
+                    placeholder="Ingrese el diagnóstico con código CIE-10 si es posible"
                     className="min-h-[60px]"
                   />
                 </div>
@@ -692,7 +692,7 @@ export default function SpecialtyMedicalHistoryForm({
                   <Label htmlFor="secondaryDiagnosis">Diagnóstico Secundario</Label>
                   <Textarea
                     {...register('secondaryDiagnosis')}
-                    placeholder="Diagnósticos secundarios"
+                    placeholder="Ingrese otros diagnósticos"
                     className="min-h-[60px]"
                   />
                 </div>
@@ -715,10 +715,10 @@ export default function SpecialtyMedicalHistoryForm({
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="observations">Observaciones Adicionales</Label>
+                  <Label htmlFor="observations">Plan y Tratamiento</Label>
                   <Textarea
                     {...register('observations')}
-                    placeholder="Plan de tratamiento, seguimiento, observaciones adicionales"
+                    placeholder="Describa el plan de tratamiento, seguimiento y observaciones"
                     className="min-h-[100px]"
                   />
                 </div>

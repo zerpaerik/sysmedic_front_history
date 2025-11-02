@@ -17,7 +17,8 @@ export class PDFService {
     medicalRecord: MedicalRecord,
     patient: Patient | null,
     medicalHistory: any,
-    specialtyHistory: any
+    specialtyHistory: any,
+    companyName?: string
   ): Promise<void> {
     try {
       // Convertir firma a base64 si existe
@@ -39,7 +40,7 @@ export class PDFService {
       }
 
       // Crear un elemento HTML temporal para el PDF
-      const pdfContent = this.createPDFContent(medicalRecord, patient, medicalHistory, specialtyHistory, signatureBase64);
+      const pdfContent = this.createPDFContent(medicalRecord, patient, medicalHistory, specialtyHistory, signatureBase64, companyName);
       
       // Crear un contenedor temporal en el DOM
       const tempContainer = document.createElement('div');
@@ -138,7 +139,8 @@ export class PDFService {
     patient: Patient | null,
     medicalHistory: any,
     specialtyHistory: any,
-    signatureBase64: string = ''
+    signatureBase64: string = '',
+    companyName?: string
   ): string {
     const formatDate = (date: Date | string) => {
       return new Date(date).toLocaleDateString('es-PE', {
@@ -163,14 +165,15 @@ export class PDFService {
     return `
       <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
         <!-- Header -->
-        <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; page-break-inside: avoid;">
+          ${companyName ? `<p style="margin: 0 0 10px 0; font-size: 16px; font-weight: 600; opacity: 0.95;">${companyName}</p>` : ''}
           <h1 style="margin: 0; font-size: 28px; font-weight: bold;">HISTORIA CLÍNICA</h1>
           <h2 style="margin: 10px 0 0 0; font-size: 20px; opacity: 0.9;">HC-${medicalRecord.recordNumber}</h2>
           <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">Sistema de Gestión Médica - SYSMEDIC</p>
         </div>
 
         <!-- Información del Paciente -->
-        <div style="margin-bottom: 25px; padding: 20px; background: #f8f9ff; border-left: 5px solid #4f46e5; border-radius: 8px;">
+        <div style="margin-bottom: 25px; padding: 20px; background: #f8f9ff; border-left: 5px solid #4f46e5; border-radius: 8px; page-break-inside: avoid;">
           <h3 style="margin: 0 0 15px 0; color: #4f46e5; font-size: 18px; display: flex; align-items: center;">
             <span style="display: inline-block; width: 20px; height: 20px; background: #4f46e5; border-radius: 50%; margin-right: 10px;"></span>
             INFORMACIÓN DEL PACIENTE
@@ -200,7 +203,7 @@ export class PDFService {
         </div>
 
         <!-- Información de la Consulta -->
-        <div style="margin-bottom: 25px; padding: 20px; background: #f0f9ff; border-left: 5px solid #0ea5e9; border-radius: 8px;">
+        <div style="margin-bottom: 25px; padding: 20px; background: #f0f9ff; border-left: 5px solid #0ea5e9; border-radius: 8px; page-break-inside: avoid;">
           <h3 style="margin: 0 0 15px 0; color: #0ea5e9; font-size: 18px; display: flex; align-items: center;">
             <span style="display: inline-block; width: 20px; height: 20px; background: #0ea5e9; border-radius: 50%; margin-right: 10px;"></span>
             INFORMACIÓN DE LA CONSULTA
@@ -229,7 +232,7 @@ export class PDFService {
 
         ${hasTriageData(medicalRecord) && medicalRecord.triage ? `
         <!-- Triaje -->
-        <div style="margin-bottom: 25px; padding: 20px; background: #f0fdf4; border-left: 5px solid #22c55e; border-radius: 8px;">
+        <div style="margin-bottom: 25px; padding: 20px; background: #f0fdf4; border-left: 5px solid #22c55e; border-radius: 8px; page-break-inside: avoid;">
           <h3 style="margin: 0 0 15px 0; color: #22c55e; font-size: 18px; display: flex; align-items: center;">
             <span style="display: inline-block; width: 20px; height: 20px; background: #22c55e; border-radius: 50%; margin-right: 10px;"></span>
             TRIAJE
@@ -283,7 +286,7 @@ export class PDFService {
 
         ${medicalHistory ? `
         <!-- Antecedentes Médicos -->
-        <div style="margin-bottom: 25px; padding: 20px; background: #fefce8; border-left: 5px solid #eab308; border-radius: 8px;">
+        <div style="margin-bottom: 25px; padding: 20px; background: #fefce8; border-left: 5px solid #eab308; border-radius: 8px; page-break-inside: avoid;">
           <h3 style="margin: 0 0 15px 0; color: #eab308; font-size: 18px; display: flex; align-items: center;">
             <span style="display: inline-block; width: 20px; height: 20px; background: #eab308; border-radius: 50%; margin-right: 10px;"></span>
             ANTECEDENTES MÉDICOS
@@ -293,6 +296,20 @@ export class PDFService {
           <div style="margin-bottom: 15px; padding: 15px; background: white; border-radius: 6px; border: 1px solid #fde047;">
             <strong style="color: #a16207;">Antecedentes Personales:</strong><br>
             ${medicalHistory.personalHistory}
+          </div>
+          ` : ''}
+          
+          ${medicalHistory.chronicDiseases ? `
+          <div style="margin-bottom: 15px; padding: 15px; background: white; border-radius: 6px; border: 1px solid #fde047;">
+            <strong style="color: #a16207;">Enfermedades Crónicas:</strong><br>
+            ${medicalHistory.chronicDiseases}
+          </div>
+          ` : ''}
+          
+          ${medicalHistory.allergies ? `
+          <div style="margin-bottom: 15px; padding: 15px; background: white; border-radius: 6px; border: 1px solid #fde047;">
+            <strong style="color: #a16207;">Alergias:</strong><br>
+            ${medicalHistory.allergies}
           </div>
           ` : ''}
           
@@ -321,7 +338,7 @@ export class PDFService {
 
         ${specialtyHistory ? `
         <!-- Historia Clínica por Especialidad -->
-        <div style="margin-bottom: 25px; padding: 20px; background: #fdf2f8; border-left: 5px solid #ec4899; border-radius: 8px;">
+        <div style="margin-bottom: 25px; padding: 20px; background: #fdf2f8; border-left: 5px solid #ec4899; border-radius: 8px; page-break-inside: avoid;">
           <h3 style="margin: 0 0 15px 0; color: #ec4899; font-size: 18px; display: flex; align-items: center;">
             <span style="display: inline-block; width: 20px; height: 20px; background: #ec4899; border-radius: 50%; margin-right: 10px;"></span>
             HISTORIA CLÍNICA - ${medicalRecord.specialty.name.toUpperCase()}
@@ -390,7 +407,7 @@ export class PDFService {
         ` : ''}
 
         <!-- Información de Registro -->
-        <div style="margin-bottom: 25px; padding: 20px; background: #f1f5f9; border-left: 5px solid #64748b; border-radius: 8px;">
+        <div style="margin-bottom: 25px; padding: 20px; background: #f1f5f9; border-left: 5px solid #64748b; border-radius: 8px; page-break-inside: avoid;">
           <h3 style="margin: 0 0 15px 0; color: #64748b; font-size: 18px; display: flex; align-items: center;">
             <span style="display: inline-block; width: 20px; height: 20px; background: #64748b; border-radius: 50%; margin-right: 10px;"></span>
             INFORMACIÓN DE REGISTRO

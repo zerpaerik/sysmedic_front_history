@@ -29,6 +29,7 @@ import { MedicalRecord, MedicalRecordStatus } from '@/types/medicalRecord';
 import { Patient } from '@/types/patient';
 import { medicalRecordService } from '@/services/medicalRecordService';
 import { pdfService } from '@/services/pdfService';
+import { authService } from '@/lib/auth';
 import { toast } from 'sonner';
 
 interface MedicalRecordDetailViewProps {
@@ -80,11 +81,15 @@ const MedicalRecordDetailView: React.FC<MedicalRecordDetailViewProps> = ({
   const handleGeneratePDF = async () => {
     setGeneratingPdf(true);
     try {
+      const user = authService.getUser();
+      const companyName = user?.companyName;
+      
       await pdfService.generateMedicalRecordPDF(
         medicalRecord,
         patient,
         medicalHistory,
-        specialtyHistory
+        specialtyHistory,
+        companyName
       );
       toast.success('PDF generado y descargado exitosamente');
     } catch (error) {
@@ -360,6 +365,30 @@ const MedicalRecordDetailView: React.FC<MedicalRecordDetailViewProps> = ({
               </div>
             )}
 
+            {medicalHistory.chronicDiseases && (
+              <div>
+                <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Enfermedades Crónicas
+                </h5>
+                <p className="text-sm text-gray-700 bg-orange-50 p-3 rounded-lg">
+                  {medicalHistory.chronicDiseases}
+                </p>
+              </div>
+            )}
+
+            {medicalHistory.allergies && (
+              <div>
+                <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  Alergias
+                </h5>
+                <p className="text-sm text-gray-700 bg-red-50 p-3 rounded-lg">
+                  {medicalHistory.allergies}
+                </p>
+              </div>
+            )}
+
             {medicalHistory.surgicalHistory && (
               <div>
                 <h5 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
@@ -477,7 +506,7 @@ const MedicalRecordDetailView: React.FC<MedicalRecordDetailViewProps> = ({
 
             {specialtyHistory.observations && (
               <div>
-                <h5 className="font-medium text-gray-900 mb-2">Observaciones</h5>
+                <h5 className="font-medium text-gray-900 mb-2">Plan y Tratamiento</h5>
                 <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
                   {specialtyHistory.observations}
                 </p>

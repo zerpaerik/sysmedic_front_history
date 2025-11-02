@@ -233,25 +233,6 @@ export default function MedicalHistoryBaseForm({
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Información General */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="bloodType">Tipo de Sangre</Label>
-                <Select value={watch('bloodType') || ''} onValueChange={(value) => setValue('bloodType', value as BloodType)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo de sangre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(BloodType).map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
             {/* Antecedentes Personales */}
             <Card>
               <CardHeader>
@@ -334,15 +315,6 @@ export default function MedicalHistoryBaseForm({
                   <Textarea
                     {...register('occupation')}
                     placeholder="Ingrese ocupación"
-                    className="min-h-[80px]"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="travelHistory">Historia de Viajes</Label>
-                  <Textarea
-                    {...register('travelHistory')}
-                    placeholder="Ingrese historia de viajes"
                     className="min-h-[80px]"
                   />
                 </div>
