@@ -18,6 +18,7 @@ export interface AuthResponse {
     role: string;
     companyId?: string;
     companyName?: string;
+    companyRuc?: string;
   };
 }
 
@@ -30,6 +31,7 @@ export interface User {
   role: string;
   companyId?: string;
   companyName?: string;
+  companyRuc?: string;
 }
 
 class AuthService {

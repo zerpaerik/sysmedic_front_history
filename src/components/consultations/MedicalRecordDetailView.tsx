@@ -83,13 +83,15 @@ const MedicalRecordDetailView: React.FC<MedicalRecordDetailViewProps> = ({
     try {
       const user = authService.getUser();
       const companyName = user?.companyName;
+      const companyRuc = user?.companyRuc;
       
       await pdfService.generateMedicalRecordPDF(
         medicalRecord,
         patient,
         medicalHistory,
         specialtyHistory,
-        companyName
+        companyName,
+        companyRuc
       );
       toast.success('PDF generado y descargado exitosamente');
     } catch (error) {

@@ -18,7 +18,8 @@ export class PDFService {
     patient: Patient | null,
     medicalHistory: any,
     specialtyHistory: any,
-    companyName?: string
+    companyName?: string,
+    companyRuc?: string
   ): Promise<void> {
     try {
       // Convertir firma a base64 si existe
@@ -40,7 +41,7 @@ export class PDFService {
       }
 
       // Crear un elemento HTML temporal para el PDF
-      const pdfContent = this.createPDFContent(medicalRecord, patient, medicalHistory, specialtyHistory, signatureBase64, companyName);
+      const pdfContent = this.createPDFContent(medicalRecord, patient, medicalHistory, specialtyHistory, signatureBase64, companyName, companyRuc);
       
       // Crear un contenedor temporal en el DOM
       const tempContainer = document.createElement('div');
@@ -140,7 +141,8 @@ export class PDFService {
     medicalHistory: any,
     specialtyHistory: any,
     signatureBase64: string = '',
-    companyName?: string
+    companyName?: string,
+    companyRuc?: string
   ): string {
     const formatDate = (date: Date | string) => {
       return new Date(date).toLocaleDateString('es-PE', {
@@ -166,7 +168,8 @@ export class PDFService {
       <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
         <!-- Header -->
         <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; page-break-inside: avoid;">
-          ${companyName ? `<p style="margin: 0 0 10px 0; font-size: 16px; font-weight: 600; opacity: 0.95;">${companyName}</p>` : ''}
+          ${companyName ? `<p style="margin: 0 0 5px 0; font-size: 16px; font-weight: 600; opacity: 0.95;">${companyName}</p>` : ''}
+          ${companyRuc ? `<p style="margin: 0 0 10px 0; font-size: 13px; opacity: 0.85;">RUC: ${companyRuc}</p>` : ''}
           <h1 style="margin: 0; font-size: 28px; font-weight: bold;">HISTORIA CLÍNICA</h1>
           <h2 style="margin: 10px 0 0 0; font-size: 20px; opacity: 0.9;">HC-${medicalRecord.recordNumber}</h2>
           <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">Sistema de Gestión Médica - SYSMEDIC</p>
@@ -377,13 +380,6 @@ export class PDFService {
             <strong style="color: #be185d;">Diagnósticos:</strong><br>
             ${specialtyHistory.diagnoses.map((diagnosis: any, index: number) => `
               <div style="margin: 10px 0; padding: 10px; background: #fce7f3; border-radius: 4px;">
-                <span style="background: #ec4899; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 8px;">
-                  ${diagnosis.type || 'Diagnóstico'}
-                </span>
-                <span style="background: #be185d; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px;">
-                  ${diagnosis.certainty || 'Sin especificar'}
-                </span>
-                <br><br>
                 ${diagnosis.description}
               </div>
             `).join('')}
