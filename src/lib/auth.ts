@@ -15,6 +15,8 @@ export interface AuthResponse {
     firstName: string;
     lastName: string;
     role: string;
+    companyId?: string;
+    companyName?: string;
   };
 }
 
@@ -24,6 +26,8 @@ export interface User {
   firstName: string;
   lastName: string;
   role: string;
+  companyId?: string;
+  companyName?: string;
 }
 
 class AuthService {
