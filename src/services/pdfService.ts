@@ -336,6 +336,51 @@ export class PDFService {
             ${medicalHistory.familyHistory}
           </div>
           ` : ''}
+          
+          ${(medicalHistory.lastMenstrualPeriod || medicalHistory.pregnancies || medicalHistory.births || 
+            medicalHistory.pap || medicalHistory.mac || medicalHistory.andria) ? `
+          <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 6px; border: 1px solid #fde047;">
+            <strong style="color: #a16207;">Antecedentes Gineco-Obstétricos:</strong><br>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+              ${medicalHistory.lastMenstrualPeriod ? `
+                <div style="padding: 8px; background: #fef3f2; border-radius: 4px;">
+                  <strong style="font-size: 11px; color: #991b1b;">FUR:</strong><br>
+                  <span style="font-size: 12px;">${medicalHistory.lastMenstrualPeriod}</span>
+                </div>
+              ` : ''}
+              ${medicalHistory.pap ? `
+                <div style="padding: 8px; background: #fef3f2; border-radius: 4px;">
+                  <strong style="font-size: 11px; color: #991b1b;">PAP:</strong><br>
+                  <span style="font-size: 12px;">${medicalHistory.pap}</span>
+                </div>
+              ` : ''}
+              ${medicalHistory.mac ? `
+                <div style="padding: 8px; background: #fef3f2; border-radius: 4px;">
+                  <strong style="font-size: 11px; color: #991b1b;">MAC:</strong><br>
+                  <span style="font-size: 12px;">${medicalHistory.mac}</span>
+                </div>
+              ` : ''}
+              ${medicalHistory.andria ? `
+                <div style="padding: 8px; background: #fef3f2; border-radius: 4px;">
+                  <strong style="font-size: 11px; color: #991b1b;">Andria:</strong><br>
+                  <span style="font-size: 12px;">${medicalHistory.andria}</span>
+                </div>
+              ` : ''}
+              ${medicalHistory.pregnancies ? `
+                <div style="padding: 8px; background: #fef3f2; border-radius: 4px;">
+                  <strong style="font-size: 11px; color: #991b1b;">G (Gestas):</strong><br>
+                  <span style="font-size: 12px;">${medicalHistory.pregnancies}</span>
+                </div>
+              ` : ''}
+              ${medicalHistory.births ? `
+                <div style="padding: 8px; background: #fef3f2; border-radius: 4px;">
+                  <strong style="font-size: 11px; color: #991b1b;">P (Partos):</strong><br>
+                  <span style="font-size: 12px;">${medicalHistory.births}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+          ` : ''}
         </div>
         ` : ''}
 

@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -14,6 +15,7 @@ import { toast } from '@/components/ui/toast';
 import { MedicalHistoryService } from '@/services/medicalHistoryService';
 import { BloodType, CreateMedicalHistoryBaseDto, MedicalHistoryBase } from '@/types/medicalHistory';
 import { MedicalRecord } from '@/types/medicalRecord';
+import { Gender } from '@/types/patient';
 
 const medicalHistoryBaseSchema = z.object({
   bloodType: z.nativeEnum(BloodType).optional(),
@@ -35,6 +37,13 @@ const medicalHistoryBaseSchema = z.object({
   workEnvironment: z.string().optional(),
   travelHistory: z.string().optional(),
   observations: z.string().optional(),
+  // Campos gineco-obstétricos
+  lastMenstrualPeriod: z.string().optional(),
+  pregnancies: z.string().optional(),
+  births: z.string().optional(),
+  pap: z.string().optional(),
+  mac: z.string().optional(),
+  andria: z.string().optional(),
   // Campos boolean para controlar la visibilidad
   hasAllergies: z.boolean().optional(),
   hasChronicDiseases: z.boolean().optional(),
@@ -117,6 +126,14 @@ export default function MedicalHistoryBaseForm({
         setValue('travelHistory', data.travelHistory || '');
         setValue('observations', data.observations || '');
         
+        // Campos gineco-obstétricos
+        setValue('lastMenstrualPeriod', data.lastMenstrualPeriod || '');
+        setValue('pregnancies', data.pregnancies?.toString() || '');
+        setValue('births', data.births?.toString() || '');
+        setValue('pap', data.pap || '');
+        setValue('mac', data.mac || '');
+        setValue('andria', data.andria || '');
+        
         // Mapear campos boolean
         setValue('smoker', data.smoker || false);
         setValue('alcoholConsumer', data.alcoholConsumer || false);
@@ -166,6 +183,13 @@ export default function MedicalHistoryBaseForm({
         workEnvironment: data.workEnvironment,
         travelHistory: data.travelHistory,
         observations: data.observations,
+        // Campos gineco-obstétricos
+        lastMenstrualPeriod: data.lastMenstrualPeriod,
+        pregnancies: data.pregnancies ? parseInt(data.pregnancies) : undefined,
+        births: data.births ? parseInt(data.births) : undefined,
+        pap: data.pap,
+        mac: data.mac,
+        andria: data.andria,
         // Campos booleanos que sí existen en el backend
         smoker: data.smoker,
         alcoholConsumer: data.alcoholConsumer,
@@ -294,6 +318,72 @@ export default function MedicalHistoryBaseForm({
                 {renderCheckboxField('¿Usa drogas?', 'drugUser', 'drugHistory')}
               </CardContent>
             </Card>
+
+            {/* Antecedentes Gineco-Obstétricos - Solo para pacientes femeninos */}
+            {medicalRecord.patient.gender === Gender.FEMENINO && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Antecedentes Gineco-Obstétricos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="lastMenstrualPeriod">FUR (dd/mm/aaaa)</Label>
+                      <Input
+                        {...register('lastMenstrualPeriod')}
+                        placeholder="dd/mm/aaaa"
+                        type="text"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="pap">PAP</Label>
+                      <Input
+                        {...register('pap')}
+                        placeholder="RF"
+                        type="text"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="mac">MAC</Label>
+                      <Input
+                        {...register('mac')}
+                        placeholder="FR"
+                        type="text"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="andria">Andria</Label>
+                      <Input
+                        {...register('andria')}
+                        placeholder="FR"
+                        type="text"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="pregnancies">G (Gestas)</Label>
+                      <Input
+                        {...register('pregnancies')}
+                        placeholder="FR"
+                        type="text"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="births">P (Partos)</Label>
+                      <Input
+                        {...register('births')}
+                        placeholder="FR"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Información Adicional */}
             <Card>

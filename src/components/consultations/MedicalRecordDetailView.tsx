@@ -426,6 +426,55 @@ const MedicalRecordDetailView: React.FC<MedicalRecordDetailViewProps> = ({
                 </p>
               </div>
             )}
+
+            {/* Antecedentes Gineco-Obstétricos - Solo para pacientes femeninos */}
+            {(medicalHistory.lastMenstrualPeriod || medicalHistory.pregnancies || medicalHistory.births || 
+              medicalHistory.pap || medicalHistory.mac || medicalHistory.andria) && (
+              <div className="border-t pt-4 mt-4">
+                <h5 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <Heart className="w-4 h-4" />
+                  Antecedentes Gineco-Obstétricos
+                </h5>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {medicalHistory.lastMenstrualPeriod && (
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">FUR</p>
+                      <p className="text-sm text-gray-900">{medicalHistory.lastMenstrualPeriod}</p>
+                    </div>
+                  )}
+                  {medicalHistory.pap && (
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">PAP</p>
+                      <p className="text-sm text-gray-900">{medicalHistory.pap}</p>
+                    </div>
+                  )}
+                  {medicalHistory.mac && (
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">MAC</p>
+                      <p className="text-sm text-gray-900">{medicalHistory.mac}</p>
+                    </div>
+                  )}
+                  {medicalHistory.andria && (
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">Andria</p>
+                      <p className="text-sm text-gray-900">{medicalHistory.andria}</p>
+                    </div>
+                  )}
+                  {medicalHistory.pregnancies && (
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">G (Gestas)</p>
+                      <p className="text-sm text-gray-900">{medicalHistory.pregnancies}</p>
+                    </div>
+                  )}
+                  {medicalHistory.births && (
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">P (Partos)</p>
+                      <p className="text-sm text-gray-900">{medicalHistory.births}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

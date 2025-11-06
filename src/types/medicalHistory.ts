@@ -86,6 +86,9 @@ export interface MedicalHistoryBase {
   lastMenstrualPeriod?: string;
   menarche?: number;
   contraceptiveMethod?: string;
+  pap?: string;
+  mac?: string;
+  andria?: string;
 
   // Antecedentes ocupacionales
   occupation?: string;
@@ -313,6 +316,9 @@ export interface CreateMedicalHistoryBaseDto {
   lastMenstrualPeriod?: string;
   menarche?: number;
   contraceptiveMethod?: string;
+  pap?: string;
+  mac?: string;
+  andria?: string;
   occupation?: string;
   occupationalRisks?: string;
   workEnvironment?: string;
